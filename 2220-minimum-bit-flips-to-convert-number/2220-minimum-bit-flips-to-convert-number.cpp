@@ -1,13 +1,15 @@
 class Solution {
 public:
     int minBitFlips(int start, int goal) {
-        // XOR to find differing bits
-        int xorResult = start ^ goal;
         int count = 0;
-        // Brian Kernighans algorithm to count 1s
-        while (xorResult) {
-            xorResult &= (xorResult - 1);  // Clear the lowest set bit
-            count++;
+        while (start > 0 || goal > 0) {
+            // Increment count if the current bits differ
+            if ((start & 1) != (goal & 1)) {
+                count++;
+            }
+            // Shift both numbers to the right to check the next bits
+            start >>= 1;
+            goal >>= 1;
         }
         return count;
     }
