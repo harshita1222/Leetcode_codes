@@ -1,30 +1,29 @@
 class Solution {
-public:
-    int minExtraChar(string s, vector<string> dictionary) {
+    Integer[] memo;
+    HashSet<String> dictionarySet;
+    public int minExtraChar(String s, String[] dictionary) {
         int n = s.length();
-        unordered_set<string> dictionarySet(dictionary.begin(), dictionary.end());
-        unordered_map<int, int> memo;
-
-        function<int(int)> dp = [&](int start) {
-            if (start == n) {
-                return 0;
-            }
-            if (memo.count(start)) {
-                return memo[start];
-            }
-            // To count this character as a left over character 
-            // move to index 'start + 1'
-            int ans = dp(start + 1) + 1;
-            for (int end = start; end < n; end++) {
-                auto curr = s.substr(start, end - start + 1);
-                if (dictionarySet.count(curr)) {
-                    ans = min(ans, dp(end + 1));
-                }
-            }
-
-            return memo[start] = ans;
-        };
-
-        return dp(0);
+        memo = new Integer[n];
+        dictionarySet = new HashSet<>(Arrays.asList(dictionary));
+        return dp(0, n, s);
     }
-};
+    private int dp(int start, int n, String s) {
+        if (start == n) {
+            return 0;
+        }
+        if (memo[start] != null) {
+            return memo[start];
+        }
+        // To count this character as a left over character 
+        // move to index 'start + 1'
+        int ans = dp(start + 1, n, s) + 1;
+        for (int end = start; end < n; end++) {
+            var curr = s.substring(start, end + 1);
+            if (dictionarySet.contains(curr)) {
+                ans = Math.min(ans, dp(end + 1, n, s));
+            }
+        }
+
+        return memo[start] = ans;
+    }
+}
